@@ -1,26 +1,69 @@
 class Song
-  attr_accessor :artist, :name
 
-  def initialize(name)
-    @name = name
-  end
+    @@all = []
 
-  def artist_name=(name)
-    self.artist = Artist.find_or_create_by_name(name)
-    artist.add_song(self)
-  end
+    attr_accessor :artist, :name
 
-  def self.new_by_filename(file)
-    song_info = file.chomp(".mp3").split(" - ")
-    song = Song.new(song_info[1])
-    song.artist_name = song_info[0]
-    song
-  end
+    def initialize(name)
+        @name = name
+        @@all << self
+    end
+
+    def self.all
+        @@all
+    end
+
+    def artist_name=(name)
+        #Song.all.detect {|artist| artist.name == name} || new_artist = Artist.new(name)
+        #self.artist = new_artist
+        #OR, though not sure if ^ passes
+        # new_artist = Artist.find_or_create_by_name(name)
+        # new_artist.add_song(self)
+        # self.artist=(new_artist)
+        #OR
+        # self.artist=(Artist.find_or_create_by_name(name))
+        # artist.add_song(self)
+        #OR
+        self.artist = Artist.find_or_create_by_name(name)
+        artist.add_song(self)
+
+    end
+
+    def self.new_by_filename(filename)
+        artist = filename.split(" - ")[0]
+        song = filename.split(" - ")[1]
+        new_song = Song.new(song)
+        new_song.artist=(Artist.new(artist))
+        new_song
+    end
+
+end 
+
+
+
+# class Song
+#   attr_accessor :artist, :name
+
+#   def initialize(name)
+#     @name = name
+#   end
+
+#   def artist_name=(name)
+#     self.artist = Artist.find_or_create_by_name(name)
+#     artist.add_song(self)
+#   end
+
+#   def self.new_by_filename(file)
+#     song_info = file.chomp(".mp3").split(" - ")
+#     song = Song.new(song_info[1])
+#     song.artist_name = song_info[0]
+#     song
+#   end
   
-  def self.all 
-    @@all
-  end 
-end
+#   def self.all 
+#     @@all
+#   end 
+# end
 
 
 # class Song
